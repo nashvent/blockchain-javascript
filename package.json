@@ -1,0 +1,22 @@
+{
+  "name": "blockchain-base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://nashvent@github.com/nashvent/blockchain-javascript.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nashvent/blockchain-javascript/issues"
+  },
+  "homepage": "https://github.com/nashvent/blockchain-javascript#readme",
+  "dependencies": {
+    "crypto-js": "^4.0.0"
+  }
+}
