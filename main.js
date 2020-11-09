@@ -1,10 +1,10 @@
 var SHA256 = require("crypto-js/sha256");
 class Block {
-    constructor(index, data, previous = ""){
+    constructor(index, data, previousHash = ""){
         this.index = index;
         this.date = new Date();
         this.data = data;
-        this.previous = previous;
+        this.previousHash = previousHash;
         this.hash = this.createHash();
         this.nonce = 0;
     }
@@ -14,7 +14,7 @@ class Block {
             this.index + 
             this.date +
             this.data + 
-            this.previous + 
+            this.previousHash + 
             this.nonce
             ).toString();
     }
@@ -55,7 +55,7 @@ class Blockchain {
             let prevBlock = this.chain[i-1];
             let currBlock = this.chain[i];
             
-            if(currBlock.previous != prevBlock.hash)
+            if(currBlock.previousHash != prevBlock.hash)
                 return false;
             if(currBlock.createHash() != currBlock.hash)
                 return false;
