@@ -1,7 +1,7 @@
 const Block = require("./Block");
 
 class Blockchain {
-    constructor(difficulty = "00"){
+    constructor(difficulty = null){
         this.chain = [this.createFirstBlock("Genesis info")];
         this.difficulty = difficulty;
     }
@@ -17,7 +17,9 @@ class Blockchain {
     createBlock(data){
         const prevBlock = this.getLastBlock();
         const block = new Block(prevBlock.index+1, data, prevBlock.hash);
-        block.mine(this.difficulty);
+        if(this.difficulty !== null){
+            block.mine(this.difficulty);
+        }
         //console.log("Success! hash:"+ block.hash + " nonce:" + block.nonce);
         return block;
     }

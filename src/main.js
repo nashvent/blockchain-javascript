@@ -1,4 +1,4 @@
-const Blockchain = require("./models/Blockchain");
+const Blockchain = require("./protocols/Ripple");
 
 let coin = new Blockchain("000");
 coin.addBlock(coin.createBlock("transaction 1"));
