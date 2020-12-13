@@ -1,15 +1,9 @@
-# Blockchain example in Javascript
-A example of minimal estructure of blockchain.
-
-# Features
-The basic features of blockchain system are:
-- mine
-- arrays of blocks (chain)
-- hash content: data, date, index, previousHash and nonce
+# Blockchain Whit Consesus Algorithm in Javascript
+A basic implementation of blockchain with Stellar and Ripple consensus algorithms (protocols).
 
 # Execute
 ```
 npm i
-node main.js
+npm start
 ```
 
