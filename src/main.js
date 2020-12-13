@@ -1,7 +1,13 @@
-const Blockchain = require("./protocols/Ripple");
+const Stellar = require("./protocols/Stellar/Stellar");
 
-let coin = new Blockchain("000");
-coin.addBlock(coin.createBlock("transaction 1"));
-coin.addBlock(coin.createBlock("transaction 2"));
+// let coin = new Stellar(1000);
+// coin.addNewBlock("data1");
+// coin.addNewBlock("data2");
+// console.log(coin.toString());
 
-console.log(coin.toString());
+const Ripple = require("./protocols/Ripple/Ripple");
+
+let coin2 = new Ripple(1000);
+coin2.addNewBlock("data1");
+coin2.addNewBlock("data2");
+console.log(coin2.toString());

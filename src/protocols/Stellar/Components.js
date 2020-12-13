@@ -1,29 +1,41 @@
-// Quorum slices
-class QuorumSlices {
-    constructor(threshold, validators, innerSets) {
-        this.threshold = threshold; // limit for convert in Quorum
-        this.validators = validators; // [node, node, node]
-        this.innerSets = innerSets; // [a, b, [c, d], [e,[f,g,h], i]] 
-    }
-}
 
-class NominateMessage{
-    constructor(voted, accepted){
-        this.voted = voted; // X
-        this.accepted = accepted; // Y
-    }
-}
-
-class Ballot{
-    constructor(counter, value){
-        this.counter = counter; // n
-        this.value = value; // x
+ class Node {   
+    
+    block = null; // generate in the network
+    constructor(id){
+        this.id = id; // stellar: public key        
     }
 
-    isMoreSignificantThat(ballot){
-        if(this.counter === ballot.counter){
-            return this.value > ballot.value;
+    setBlock(block){
+        this.block = block;
+    }
+    
+    getBlock(){
+        return this.block;
+    }
+
+    validateNodes(nodes){
+        const segmentGroup = {};
+        for(let node of nodes){
+            const data = node.block.data;
+            const parseData = JSON.stringify(data); 
+            
+            if(!segmentGroup[parseData]) {
+                segmentGroup[parseData] = [];
+            }
+            segmentGroup[parseData].push(node);
+        }     
+        console.log("quorum", segmentGroup);
+        let keyOfBigger = Object.keys(segmentGroup)[0]; 
+        for(let segmentKey in segmentGroup){
+            if( segmentGroup[keyOfBigger].length < segmentGroup[segmentKey].length ){
+                keyOfBigger = segmentKey;
+            }
         }
-        return this.counter > ballot.counter; 
-    }
+        return segmentGroup[keyOfBigger][0]; // return NODE 
+    }    
 }
+
+module.exports = {
+    StellarNode : Node,
+};
