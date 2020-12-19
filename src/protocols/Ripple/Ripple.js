@@ -8,6 +8,10 @@ class Ripple{
     blockchain = null;
     serverNodes = [];
 
+    // TEST
+    consensusTime = []; // Miliseconds
+    transactionsTime = []; // Miliseconds
+
     constructor(quantityOfNodes){
         this.createNodes(quantityOfNodes)
         this.blockchain = new Blockchain();
@@ -30,27 +34,43 @@ class Ripple{
     }
 
     addNewBlock(data){
+        // TIME
+        let begin = Date.now();
+        // END TIME
+        
         for(let serverNode of this.serverNodes){
             const block = this.blockchain.createBlock(data);
             serverNode.createBlock(block);
         }
-        
+
         const electedNode = this.excecuteConsensus();
+
+       
+
+
         if(this.blockchain.addBlock(electedNode.currentBlock)){
-            console.log("Valid block added");
+             // TIME
+            this.transactionsTime.push(Date.now()-begin);
+            // END TIME
+            return true;
         }
         else{
-            console.log("Invalid block. No added.");
+            //console.log("Invalid block. No added.");
+            return false;
+            
         }
     }
 
     excecuteConsensus(){
+        // TIME
+        let begin = Date.now();
+        // END TIME
         const votingNodesCounter = {};
         const votedNodes = [];
         for(let serverNode of this.serverNodes){
             const votedNode = serverNode.executeVote();
             if(votedNode){
-                console.log(votedNode);
+                //console.log(votedNode);
                 votingNodesCounter[votedNode.id] =  (votingNodesCounter[votedNode.id])?(votingNodesCounter[votedNode.id] + 1): 1;
                 votedNodes.push(votedNode);
             }
@@ -60,6 +80,11 @@ class Ripple{
         arrayOfVoting = arrayOfVoting.sort( (a, b) => a.value - b.value); 
         const moreVoted = arrayOfVoting[0];
         const percentage = (moreVoted.value * 100) / this.serverNodes.length;
+        
+        // TIME
+        this.consensusTime.push(Date.now()-begin);
+        // END TIME
+        
         if(percentage >= 0.8){
             return votedNodes.find(node => node.id === moreVoted.key );
         }

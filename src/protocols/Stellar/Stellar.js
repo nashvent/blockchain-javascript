@@ -9,6 +9,11 @@ class Stellar{
     quorumSlices = []; // [  [node, node], [node, node] ]
     validators = []; // [node, node, node]
     
+
+    // TEST
+    consensusTime = []; // Miliseconds
+    transactionsTime = []; // Miliseconds
+
     constructor(quantityOfNodes){
         this.createNodes(quantityOfNodes)
         this.blockchain = new Blockchain();
@@ -34,6 +39,10 @@ class Stellar{
     }    
 
     addNewBlock(data){
+        // TIME
+        let begin = Date.now();
+        // END TIME
+
         // All nodes create your block
         for(let node of this.nodes){
             const block = this.blockchain.createBlock(data);
@@ -42,14 +51,23 @@ class Stellar{
         const electedNode = this.excecuteConsensus();
         
         if(this.blockchain.addBlock(electedNode.block)){
-            console.log("Valid block added");
+            // TIME
+            this.transactionsTime.push(Date.now()-begin);
+            // END TIME
+
+            return true;
+
         }
         else{
-            console.log("Invalid block. No added.");
+            return false;
         }
     }
 
     excecuteConsensus(){
+         // TIME
+         let begin = Date.now();
+         // END TIME
+
         this.selectNodesAndValidators();
         let electedNodes = [];
         for(let i=0; i < this.validators.length; i+= 1){
@@ -59,7 +77,13 @@ class Stellar{
 
         const validator = electedNodes[0];
         const finalQuorum = electedNodes.slice(1, electedNodes.length);
-        return validator.validateNodes(finalQuorum);
+        const validatedNode = validator.validateNodes(finalQuorum); 
+        
+         // TIME
+         this.consensusTime.push(Date.now()-begin);
+         // END TIME
+         
+        return validatedNode;
     }
 
     toString(){

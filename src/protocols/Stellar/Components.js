@@ -25,7 +25,6 @@
             }
             segmentGroup[parseData].push(node);
         }     
-        console.log("quorum", segmentGroup);
         let keyOfBigger = Object.keys(segmentGroup)[0]; 
         for(let segmentKey in segmentGroup){
             if( segmentGroup[keyOfBigger].length < segmentGroup[segmentKey].length ){
