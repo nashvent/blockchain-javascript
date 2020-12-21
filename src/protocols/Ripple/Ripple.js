@@ -3,6 +3,7 @@ const {generateUUID} = require("../../helpers/GeneralHelpers");
 const Blockchain = require("../../models/Blockchain/Blockchain");
 
 const SERVER_NODE_SIZE = 10;
+const PERCENTAGE_MIN_VOTED = 0.8;
 
 class Ripple{
     blockchain = null;
@@ -45,9 +46,6 @@ class Ripple{
 
         const electedNode = this.excecuteConsensus();
 
-       
-
-
         if(this.blockchain.addBlock(electedNode.currentBlock)){
              // TIME
             this.transactionsTime.push(Date.now()-begin);
@@ -77,6 +75,8 @@ class Ripple{
         }
         
         let arrayOfVoting = Object.keys(votingNodesCounter).map(key => ({value: votingNodesCounter[key], key: key}));
+        console.log("Array of voting", Object.keys(votingNodesCounter));
+        console.log("VotedNodes", votedNodes);
         arrayOfVoting = arrayOfVoting.sort( (a, b) => a.value - b.value); 
         const moreVoted = arrayOfVoting[0];
         const percentage = (moreVoted.value * 100) / this.serverNodes.length;
@@ -85,8 +85,10 @@ class Ripple{
         this.consensusTime.push(Date.now()-begin);
         // END TIME
         
-        if(percentage >= 0.8){
-            return votedNodes.find(node => node.id === moreVoted.key );
+        if(percentage >= PERCENTAGE_MIN_VOTED){
+            const nodeMostVoted = votedNodes.find(node => node.id === moreVoted.key ); 
+            console.log("nodeMostVoted", nodeMostVoted);
+            return nodeMostVoted;
         }
         return null;
     }

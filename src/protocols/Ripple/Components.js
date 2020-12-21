@@ -1,4 +1,4 @@
-
+const PERCENTAGE_MIN_VOTED = 0.5;
 class Node {       
     currentBlock = null; // generate in the network
     transactions = [];
@@ -24,16 +24,17 @@ class Node {
             }
             segmentGroup[parseData].push(node);
         }     
-        
+       
         let keyOfBigger = Object.keys(segmentGroup)[0]; 
         for(let segmentKey in segmentGroup){
             if( segmentGroup[keyOfBigger].length < segmentGroup[segmentKey].length ){
                 keyOfBigger = segmentKey;
             }
         }
+       
         const percentage = (segmentGroup[keyOfBigger].length * 100) / nodes.length;   
         
-        if(percentage >= 0.8){
+        if(percentage >= PERCENTAGE_MIN_VOTED){  
             return segmentGroup[keyOfBigger][0];
         }
         return null;
@@ -57,6 +58,7 @@ class ServerNode {
     }
 
     executeVote(){
+        //console.log("this.unl", this.unl);
         const votingState = {}; 
         for(let unlNode of this.unl){
             const votedNode = unlNode.voteForNode(this.nodes);
@@ -64,11 +66,10 @@ class ServerNode {
                 votingState[votedNode.id] = (votingState[votedNode.id] ? (votingState[votedNode.id] + 1) : 1); 
             }
         }
-
         let arrayState = Object.keys(votingState).map(key => ({value: votingState[key], key: key}));
         arrayState = arrayState.sort( (a, b) => a.value - b.value); 
         const percentage = (arrayState[0].value * 100) / this.nodes.length;
-        if(percentage >= 0.8){
+        if(percentage >= PERCENTAGE_MIN_VOTED){
             return this.getNode(arrayState[0].key);
         }
         return null;

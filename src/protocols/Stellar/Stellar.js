@@ -36,6 +36,7 @@ class Stellar{
             const quorumSlice = nodes.slice(i, i+quorumSize);
             this.quorumSlices.push(quorumSlice);
         }
+        console.log("validators", this.validators);
     }    
 
     addNewBlock(data){
@@ -56,7 +57,6 @@ class Stellar{
             // END TIME
 
             return true;
-
         }
         else{
             return false;
@@ -71,10 +71,12 @@ class Stellar{
         this.selectNodesAndValidators();
         let electedNodes = [];
         for(let i=0; i < this.validators.length; i+= 1){
+            console.log("this.quorumSlices", this.quorumSlices);
             const electedNode = this.validators[i].validateNodes(this.quorumSlices[i]);
+            console.log("electedNode", electedNode);
             electedNodes.push(electedNode);
         }
-
+       
         const validator = electedNodes[0];
         const finalQuorum = electedNodes.slice(1, electedNodes.length);
         const validatedNode = validator.validateNodes(finalQuorum); 
